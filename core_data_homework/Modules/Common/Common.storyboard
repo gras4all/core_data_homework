@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Item Selector View Controller-->
+        <scene sceneID="ZN2-1Z-cnY">
+            <objects>
+                <viewController storyboardIdentifier="ItemSelectorViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XzH-Zi-CfE" customClass="ItemSelectorViewController" customModule="core_data_homework" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Wa3-Jn-uRC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zJK-wW-6c8">
+                                <rect key="frame" x="16" y="343" width="382" height="210"/>
+                                <subviews>
+                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PBD-gK-DRk">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="162"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="162" id="49Y-0G-qld"/>
+                                        </constraints>
+                                    </pickerView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bT1-00-kdF">
+                                        <rect key="frame" x="50" y="162" width="30" height="30"/>
+                                        <state key="normal" title="Ok"/>
+                                        <connections>
+                                            <action selector="tapOkButton:" destination="XzH-Zi-CfE" eventType="touchUpInside" id="zIf-jD-48m"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ogb-Cr-vbt">
+                                        <rect key="frame" x="284" y="162" width="48" height="30"/>
+                                        <state key="normal" title="Cancel"/>
+                                        <connections>
+                                            <action selector="tapCancelButton:" destination="XzH-Zi-CfE" eventType="touchUpInside" id="Klc-ke-qnx"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="PBD-gK-DRk" firstAttribute="top" secondItem="zJK-wW-6c8" secondAttribute="top" id="MDd-8C-qLq"/>
+                                    <constraint firstAttribute="height" constant="210" id="UYc-gv-Pae"/>
+                                    <constraint firstItem="bT1-00-kdF" firstAttribute="leading" secondItem="zJK-wW-6c8" secondAttribute="leading" constant="50" id="YED-rl-7uF"/>
+                                    <constraint firstItem="bT1-00-kdF" firstAttribute="top" secondItem="PBD-gK-DRk" secondAttribute="bottom" id="ghv-Cc-z7q"/>
+                                    <constraint firstItem="PBD-gK-DRk" firstAttribute="leading" secondItem="zJK-wW-6c8" secondAttribute="leading" id="kYe-c7-gb6"/>
+                                    <constraint firstAttribute="trailing" secondItem="ogb-Cr-vbt" secondAttribute="trailing" constant="50" id="n2a-h5-9Fv"/>
+                                    <constraint firstItem="ogb-Cr-vbt" firstAttribute="top" secondItem="PBD-gK-DRk" secondAttribute="bottom" id="oVv-MX-EHn"/>
+                                    <constraint firstAttribute="trailing" secondItem="PBD-gK-DRk" secondAttribute="trailing" id="quh-bZ-hhv"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="fhS-1f-bP1"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.71393663056042733" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="zJK-wW-6c8" firstAttribute="centerY" secondItem="Wa3-Jn-uRC" secondAttribute="centerY" id="7yV-kS-dUC"/>
+                            <constraint firstItem="fhS-1f-bP1" firstAttribute="trailing" secondItem="zJK-wW-6c8" secondAttribute="trailing" constant="16" id="iJ3-bs-Mr5"/>
+                            <constraint firstItem="zJK-wW-6c8" firstAttribute="leading" secondItem="fhS-1f-bP1" secondAttribute="leading" constant="16" id="ioG-Ih-4S0"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="ogb-Cr-vbt" id="Kuo-zZ-QQJ"/>
+                        <outlet property="okButton" destination="bT1-00-kdF" id="4yz-XM-gpI"/>
+                        <outlet property="pickerView" destination="PBD-gK-DRk" id="SDf-UA-mL7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MzA-ZR-xEN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="69.565217391304358" y="145.98214285714286"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
