@@ -10,7 +10,12 @@ import UIKit
 final class MainViewController: UIViewController {
     
     @IBOutlet weak var playersTable: UITableView!
+    @IBOutlet weak var inPlaySegmentedControl: UISegmentedControl!
     
+    var filterPredicate: NSPredicate?
+    var selectedPredicates: NSCompoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [])
+    var searchPredicates: [NSPredicate] = []
+
     var dataManager: CoreDataManager!
     var players: [Player] = [] {
         didSet {
@@ -37,6 +42,25 @@ final class MainViewController: UIViewController {
         self.navigationController?.pushViewController(playerViewController, animated: true)
     }
     
+    @objc func searchTapped() {
+        let storyboard = UIStoryboard(name: "Player", bundle: Bundle.main)
+        guard let playerSearchViewController = storyboard.instantiateViewController(withIdentifier: String(describing: PlayerSearchViewController.self)) as? PlayerSearchViewController else {
+            return
+        }
+        playerSearchViewController.dataManager = dataManager
+        playerSearchViewController.searchClosure = { [weak self] predicates in
+            guard let _self = self else { return }
+            _self.searchPredicates = predicates
+            var predicates = _self.searchPredicates
+            if let _filterPredicate = _self.filterPredicate {
+                predicates.append(_filterPredicate)
+            }
+            _self.selectedPredicates = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+            _self.updatePlayers()
+        }
+        self.navigationController?.pushViewController(playerSearchViewController, animated: true)
+    }
+    
     func contextualDeleteAction(forRowAtIndexPath indexPath: IndexPath) -> UIContextualAction {
         let player = players[indexPath.row]
         let action = UIContextualAction(style: .destructive, title: "Delete") { [weak self] (contextAction: UIContextualAction, sourceView: UIView, completionHandler: (Bool) -> Void) in
@@ -48,8 +72,26 @@ final class MainViewController: UIViewController {
     }
 
     func updatePlayers() {
-        players = dataManager.fetchData(for: Player.self)
+        players = dataManager.fetchData(for: Player.self, predicate: selectedPredicates)
     }
+    
+    @IBAction func inPlaySegmentSelected(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 1:
+            var predicates = self.searchPredicates
+            self.filterPredicate = NSPredicate(format: "inPlay == %@", NSNumber(value: true))
+            predicates.append(filterPredicate ?? NSPredicate())
+            self.selectedPredicates = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        case 2:
+            var predicates = self.searchPredicates
+            predicates.append(NSPredicate(format: "inPlay == %@", NSNumber(value: false)))
+            self.selectedPredicates = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        default:
+            self.selectedPredicates = NSCompoundPredicate(andPredicateWithSubpredicates: self.searchPredicates)
+        }
+        updatePlayers()
+    }
+    
 
 }
 
@@ -67,7 +109,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         cell.playerFullname.text = player.fullname
         cell.positionLabel.text = player.position
         cell.playerNumber.text = player.number
-        cell.teamLabel.text = player.club?.name 
+        cell.teamLabel.text = player.club?.name
+        if player.inPlay {
+            cell.statusLabel.text = "In Play"
+        } else {
+            cell.statusLabel.text = "Bench"
+        }
         if let photo = player.image as? Data {
             cell.playerPhoto.image = UIImage(data: photo)
         }
@@ -107,6 +154,8 @@ private extension MainViewController {
     }
     
     func setupNavigationBar() {
+        self.title = "Team Manager"
+        
         let addPlayerItemView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 35))
         let addPlayerImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 35))
         let addFolderTap = UITapGestureRecognizer(target: self, action: #selector(addPlayerTapped))
@@ -116,6 +165,16 @@ private extension MainViewController {
         addPlayerItemView.addGestureRecognizer(addFolderTap)
         let addPlayerItem = UIBarButtonItem(customView: addPlayerItemView)
         navigationItem.rightBarButtonItems = [addPlayerItem]
+        
+        let searchItemView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 35))
+        let searchImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 35))
+        let searchTap = UITapGestureRecognizer(target: self, action: #selector(searchTapped))
+        searchImageView.image = UIImage(systemName: "magnifyingglass")
+        searchImageView.tintColor = UIColor.gray
+        searchItemView.addSubview(searchImageView)
+        searchItemView.addGestureRecognizer(searchTap)
+        let searchItem = UIBarButtonItem(customView: searchItemView)
+        navigationItem.leftBarButtonItems = [searchItem]
     }
     
 }

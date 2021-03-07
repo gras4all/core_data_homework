@@ -16,8 +16,9 @@ final class PlayerViewController: UIViewController {
     @IBOutlet weak var selectTeamButton: UIButton!
     @IBOutlet weak var selectPositionButton: UIButton!
     @IBOutlet weak var numberField: UITextField!
+    @IBOutlet weak var inPlaySegmentedControl: UISegmentedControl!
     
-    let positions = ["attack", "midfielder", "goalkeeper"]
+    var inPlay: Bool = true
     
     var team: Club?
     var position: String?
@@ -66,12 +67,12 @@ final class PlayerViewController: UIViewController {
         }
         itemSelectorViewController.modalTransitionStyle = .crossDissolve
         itemSelectorViewController.modalPresentationStyle = .overFullScreen
-        itemSelectorViewController.items = positions
+        itemSelectorViewController.items = MockData.positions
         itemSelectorViewController.itemSelected = { [weak self] row in
             guard let _self = self else { return }
-            _self.position = _self.positions[row]
+            _self.position = MockData.positions[row]
             UIView.performWithoutAnimation {
-                _self.selectPositionButton.setTitle(_self.positions[row], for: .normal)
+                _self.selectPositionButton.setTitle(MockData.positions[row], for: .normal)
             }
             itemSelectorViewController.dismiss(animated: true, completion: nil)
         }
@@ -85,6 +86,7 @@ final class PlayerViewController: UIViewController {
         player.nationality = nationalityField.text
         player.number = numberField.text
         player.club = team
+        player.inPlay = inPlay
         if let age = Int16(ageField.text ?? "") {
             player.age = age
         }
@@ -95,6 +97,15 @@ final class PlayerViewController: UIViewController {
         dataManager.save(context: context)
         self.navigationController?.popViewController(animated: true)
     }
+    
+    @IBAction func inPlayChanged(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            inPlay = true
+        } else {
+            inPlay = false
+        }
+    }
+    
     
     @objc func handleTapSpace() {
         view.endEditing(true)
