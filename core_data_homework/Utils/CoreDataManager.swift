@@ -54,7 +54,7 @@ final class CoreDataManager {
         save(context: context)
     }
     
-    func fetchData<T: NSManagedObject>(for entity: T.Type) -> [T] {
+    func fetchData<T: NSManagedObject>(for entity: T.Type, predicate: NSPredicate? = nil) -> [T] {
         let context = getContext()
         let request: NSFetchRequest<T>
         var fetchedResult = [T]()
@@ -64,6 +64,7 @@ final class CoreDataManager {
             let entityName = String(describing: entity)
             request = NSFetchRequest(entityName: entityName)
         }
+        request.predicate = predicate
         do {
             fetchedResult = try context.fetch(request)
             

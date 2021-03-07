@@ -16,5 +16,7 @@ final class PlayerCell: UITableViewCell {
     @IBOutlet weak var playerNumber: UILabel!
     @IBOutlet weak var playerFullname: UILabel!
     @IBOutlet weak var playerPhoto: UIImageView!
+    @IBOutlet weak var statusLabel: UILabel!
+    
     
 }
